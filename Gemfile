@@ -67,3 +67,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "refile", require: "refile/rails", github: 'menfe/refile'
+
+gem "refile-mini_magick"
