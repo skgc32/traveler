@@ -6,16 +6,20 @@ class PostsController < ApplicationController
 
   def create
     post = Post.new(post_params)
+    post.user_id = current_user.id
     post.save
     redirect_to post_path(post.id)
   end
   
   def index
-    @posts = Post.all
+    @posts = Post.page(params[:page]).reverse_order
+    @posts = @posts.where('location LIKE ?', "%#{params[:search]}%") if params[:search].present?
   end
 
   def show
     @post = Post.find(params[:id])
+    @comment = Comment.new
+    @comments = @post.comments.page(params[:page]).per(7).reverse_order
   end
 
   def edit
@@ -33,11 +37,10 @@ class PostsController < ApplicationController
     post.destroy
     redirect_to posts_path
   end
-  
-    private
+
+  private
   def post_params
-    params.require(:post).permit(:location, :text)
+    params.require(:post).permit(:user_id, :location, :text, :image)
   end
 
 end
-

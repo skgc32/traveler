@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
-  get 'posts/new' # 削除
-  post 'posts' => 'posts#create' # 削除
-  resources :posts
+  devise_for :users
+  resources :users, only:[:index, :show, :edit, :update]
+  resources :posts do
+    resources :comments, only:[:create, :destroy]
+    resource :favorites, only:[:create, :destroy]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -10,5 +13,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  get 'top' => 'homes#top'
+  root :to => 'homes#top'
 end
